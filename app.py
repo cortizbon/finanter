@@ -91,7 +91,8 @@ with tab2:
 
         for trace in fig1.data:
             fig.add_trace(trace, row=1, col=1)
-        # Update layout (optional: remove legend)
+
+                # Update layout (optional: remove legend)
         fig.update_layout(title="Histórico", showlegend=False)
 
 
@@ -102,13 +103,15 @@ with tab2:
 
 
         periodos = pres['Año'].sort_values().unique().tolist()
+
+    with col2:
         per = st.select_slider("Seleccione el periodo: ", periodos)
         pres = pres[(pres['Año'] == per)]
 
         
 
         cuentas = pres[pres['CODIGO_ENTIDAD'] / 1000 != pres['Cód. DANE Departamento'].astype(float)]['RUBRO'].sort_values().unique().tolist()
-        cuenta = st.selectbox("Seleccione el departamento: ", cuentas)
+        cuenta = st.selectbox("Seleccione el tipo de ingreso: ", cuentas)
         pres = pres[(pres['RUBRO'] == cuenta)]
 
         pres = pres.rename(columns={'CODIGO_ENTIDAD':'mpio_cdpmp'})
@@ -128,9 +131,7 @@ with tab2:
         gdf = gdf[gdf['Depto'] == depto]
 
         mapa = gpd.GeoDataFrame(pres.merge(gdf, how='left').dropna(subset='geometry'))
-
-
-    with col2:
+        
         fig, ax = plt.subplots(1, 1, figsize=(5, 3))
         mapa.plot(column='Valor_25_pop', ax=ax, legend=True)
         ax.set_axis_off()
@@ -138,4 +139,4 @@ with tab2:
 
         st.pyplot(fig)
 with tab3:
-    pass
+    st.link_button('Link to SGP', 'https://sgp-ofiscal.streamlit.app')
